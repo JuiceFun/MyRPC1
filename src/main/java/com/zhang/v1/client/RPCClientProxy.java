@@ -11,9 +11,9 @@ import java.lang.reflect.Proxy;
 
 @AllArgsConstructor
 public class RPCClientProxy implements InvocationHandler {
+    private RPCClient rpcClient;
     // 传入参数Service接口的class对象，反射封装成一个request
-    private String host;
-    private int port;
+
 
 
     // jdk 动态代理， 每一次代理对象调用方法，会经过此方法增强（反射获取request对象，socket发送至客户端）
@@ -24,7 +24,7 @@ public class RPCClientProxy implements InvocationHandler {
                 .methodName(method.getName())
                 .params(args).paramsTypes(method.getParameterTypes()).build();
         //数据传输
-        RPCResponse response = IOClient.sendRequest(host, port, request);
+        RPCResponse response = rpcClient.sendRequest( request);
         //System.out.println(response);
         return response.getData();
     }
